@@ -40,10 +40,17 @@ const Signup = () => {
         setIsSubmitting(true);
         
         try {
+            console.log("Submitting Signup:", formData);
             await signup(formData.name, formData.email, formData.password, formData.role);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            console.error("Signup error:", err);
+            // Check if backend sent a specific error message (e.g., "User already exists")
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Registration failed. Please try again.');
+            }
         } finally {
             setIsSubmitting(false);
         }
